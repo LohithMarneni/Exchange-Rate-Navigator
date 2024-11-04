@@ -16,7 +16,7 @@ class ExchangeRateNavigator{
     unordered_map<string,vector<Edge>> adjList;
     
     void fetchGraphFromApi(){
-
+        //infuture need to fetch from currency apis which are paid
     }
     public:
     void initializeadjList(){
@@ -37,7 +37,7 @@ class ExchangeRateNavigator{
         unordered_map<string, string> parent;
         for (const auto& pair : adjList) {
             dist[pair.first]=0.0;
-            parent[pair.first]="";//in future it can be used to print the path like looping till findiing source using condition of parent[souce]=""
+            parent[pair.first]="";//in future it can be used to print the path like looping till finding source using condition of parent[souce]=""
         }
         /*above part will make like this dist = {
                                             {"USD",0.0},
@@ -72,9 +72,14 @@ class ExchangeRateNavigator{
                 string nextCurrency=edge.destination;
                 double newRate=currRate*edge.exchangeRate;
                 if(newRate>dist[nextCurrency]){
-                    // if(dist[nextCurrency]!=numeric_limits<double>::infinity()){
-                    //     s.erase({dist[nextCurrency],nextCurrency});
+                    // auto outDated=s.find({dist[nextCurrency],nextCurrency});
+                    // if(outDated!=s.end()){
+                    //     s.erase(outDated);
                     // }
+                    //if already modify remove previous version add new version
+                    if(dist[nextCurrency]!=0.0){
+                        s.erase({dist[nextCurrency],nextCurrency});
+                    }
                     dist[nextCurrency]=newRate;
                     parent[nextCurrency]=currCurrency;
                     s.insert({newRate,nextCurrency});
@@ -103,16 +108,6 @@ class ExchangeRateNavigator{
             }
         }
         cout<<endl;
-        //code to print path when used method parent dist is initialized as 1.0 and set giving small as top()
-        // for(string curr=destination;curr!="";curr=parent[curr]){
-        //     path.push_back(curr);
-        // }
-        // reverse(path.begin(),path.end());
-        // cout<<"The best path from "<<source<<" to "<<destination<<" with exchange rate: "<<dist[destination]<<endl;
-        // cout<<"The best path from "<<source<<" to "<<destination<<" is: ";
-        // for(auto node:path){
-        //     cout<<node<<"->";
-        // }
         /*printing distance unordered map
             for(const auto& pair:dist) {
             cout<<pair.first<<" "<<pair.second<<endl;
@@ -124,6 +119,6 @@ class ExchangeRateNavigator{
 int main() {
     ExchangeRateNavigator navigator;
     navigator.initializeadjList(); // Initialize the adjacency list with exchange rates
-    navigator.findBestPath("USD","EUR"); // Find the best path from USD to EUR
+    navigator.findBestPath("USD","INR"); // Find the best path from USD to EUR
     return 0;
 }

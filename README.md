@@ -1,83 +1,65 @@
-# Q) why we are taking set giving max exchange rate instead min value?
-A: In this exchange rate problem, the goal is to maximize the product of exchange rates along a path from a source currency to a target currency.
-each conversion rate is a "multiplicative gain" rather than an additive cost.
-# Goal Of Maximization:
-In a typical currency conversion, you start with a certain amount of one currency (say USD) and want to maximize the equivalent amount in another currency (say INR).
-Each exchange rate between two currencies represents a multiplicative gain. This means that if you start with $1, each step in your path multiplies this amount by a rate.
-To maximize the final amount you end up with, you need to maximize the product of exchange rates along the path from the source currency to the destination currency.
-# Multiplicative Nature of Exchange Rates:
-Suppose you have a path like USD -> EUR -> JPY -> INR, where each conversion multiplies your money by a specific rate.
-If you convert USD to EUR at 0.9, and then EUR to JPY at 130.02, and finally JPY to INR at 0.67, your final amount is a product of these rates:
-1×0.9×130.02×0.67=78.71286
-So, the overall amount in INR after these conversions depends on the product of rates along the path. The larger this product, the better the final outcome.
-# Maximizing Each Step:
-At each conversion step, you want to choose the rate or path that maximizes your current product. This way, by the time you reach your destination currency, you’ve accumulated the highest possible amount.
-In contrast, if you chose paths with lower rates, you’d end up with less money by the time you finish the conversions.
-# why not minimize
-Minimizing only makes sense in scenarios where you’re reducing a cost, distance, or time. In the case of currency conversion, there’s no cost to minimize; rather, you’re aiming to maximize your return in the target currency. This is why you maximize the rate at each step rather than minimize it.
+# Exchange Rate Navigator
+![Alt text](./graphPhoto.png)
+Imagine you are planning a trip from the United States to India and you want to convert your U.S. Dollars (USD) into Indian Rupees (INR). You want to ensure that you are getting the best possible exchange rate, as currency conversion fees can significantly impact your travel budge. You need a way to find the best route(having high exchange rate) for exchanging USD to INR by potentially converting through other currencies to maximize the amount of INR you receive. For example, you might exchange USD to Euros (EUR), then from EUR to GBP (British Pounds), and finally from GBP to INR. Using Exchange Rate Navigator, you can find the best exchange rate while converting to another currency. This project uses set approach Dijkstra's algorithm for getting high exchange rates and best understanding of graphs.
 
-Execution of example:
-Initialized with source: USD having rate 1.0
 
-Processing currency: USD with current rate: 1
-  Checking edge to EUR with exchange rate 0.9, potential new rate: 0.9
-    Updated EUR: dist = 0.9, parent = USD
-  Checking edge to GBP with exchange rate 0.75, potential new rate: 0.75
-    Updated GBP: dist = 0.75, parent = USD
-  Checking edge to JPY with exchange rate 110.5, potential new rate: 110.5
-    Updated JPY: dist = 110.5, parent = USD
+## Overview
 
-Processing currency: JPY with current rate: 110.5
-  Checking edge to INR with exchange rate 0.67, potential new rate: 74.035
-    Updated INR: dist = 74.035, parent = JPY
+The **Exchange Rate Navigator** is a C++ application designed to find the best exchange rate path between currencies. This program uses a graph data structure to represent currencies as nodes and their exchange rates as edges. The application can help users determine how to convert one currency into another by following the best possible exchange rates.
+## Assumptions
 
-Processing currency: INR with current rate: 74.035
-  Checking edge to CAD with exchange rate 0.016, potential new rate: 1.18456
-    Updated CAD: dist = 1.18456, parent = INR
+- **Predefined Exchange Rates**: The application currently relies on a static set of exchange rates, which may not reflect real-time market values.
+- **Currency Availability**: The implemented exchange rates only cover a limited set of currencies. 
+- **Input Validity**: The application assumes that valid currency codes are provided as input(currently JPY GBP AUD CAD EUR USD INR).
+- **No API Key Requirement**: The current version of the application does not utilize an external API that requires an API key for access. This simplifies usage but limits the ability to fetch live data.
 
-Processing currency: CAD with current rate: 1.18456
-  Checking edge to AUD with exchange rate 1.1, potential new rate: 1.30302
-    Updated AUD: dist = 1.30302, parent = CAD
+## Features
 
-Processing currency: AUD with current rate: 1.30302
-  Checking edge to USD with exchange rate 0.7, potential new rate: 0.912111
+- **Graph Representation**: Currencies are represented as nodes, and exchange rates are edges connecting these nodes.
+- **Best Path Calculation**: The application calculates the best path from a source currency to a destination currency based on exchange rates using Dijkstra's algorithm.
 
-Processing currency: EUR with current rate: 0.9
-  Checking edge to GBP with exchange rate 0.83, potential new rate: 0.747
-  Checking edge to JPY with exchange rate 130.02, potential new rate: 117.018
-    Removing outdated entry of JPY with rate 110.5 from set
-    Updated JPY: dist = 117.018, parent = EUR
+## Structures and Classes
 
-Processing currency: JPY with current rate: 117.018
-  Checking edge to INR with exchange rate 0.67, potential new rate: 78.4021
-    Removing outdated entry of INR with rate 74.035 from set
-    Updated INR: dist = 78.4021, parent = JPY
+The project includes the following main components:
 
-Processing currency: INR with current rate: 78.4021
-  Checking edge to CAD with exchange rate 0.016, potential new rate: 1.25443
-    Removing outdated entry of CAD with rate 1.18456 from set
-    Updated CAD: dist = 1.25443, parent = INR
+- **Edge**: A struct that represents an edge in the graph, which includes a destination currency and its exchange rate.
+- **ExchangeRateNavigator**: A class that manages the adjacency list of currencies and implements the logic to find the best path based on exchange rates using Dijkstra's algorithm.
 
-Processing currency: CAD with current rate: 1.25443
-  Checking edge to AUD with exchange rate 1.1, potential new rate: 1.37988
-    Removing outdated entry of AUD with rate 1.30302 from set
-    Updated AUD: dist = 1.37988, parent = CAD
+### Key Functions
 
-Processing currency: AUD with current rate: 1.37988
-  Checking edge to USD with exchange rate 0.7, potential new rate: 0.965913
+- `initializeadjList()`: Initializes the adjacency list with predefined exchange rates between currencies.
+- `findBestPath(const string source, const string destination)`: Computes the best exchange rate path from the source currency to the destination currency.
+## Future Scope:
+- Future versions will aim to include more currencies and exchange rates to provide a broader spectrum of conversions.
+## Usage
 
-Processing currency: GBP with current rate: 0.75
-  Checking edge to INR with exchange rate 98.57, potential new rate: 73.9275
+To run the application, follow these steps:
 
-The best path from USD to EUR with exchange rate: 0.9
-The best path from USD to EUR is: USD -> EUR
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/LohithMarneni/Exchange-Rate-Navigator.git
 
-Final exchange rates for each currency:
-JPY: 117.018
-GBP: 0.75
-AUD: 1.37988
-CAD: 1.25443
-EUR: 0.9
-USD: 1
-INR: 78.4021
+2. Navigate to the project directory:
+    ```bash
+    cd Exchange-Rate-Navigator
+3. Compile the code:
+    ```bash
+    g++ main.cpp -o ExchangeRateNavigator
+4. Execute the program:
+    ```bash
+    ./ExchangeRateNavigator
+
+# Future Work
+
+API Integration:
+
+ The current implementation does not utilize an API for fetching live exchange rates. Future updates will include fetching data from currency APIs to ensure the rates are up-to-date.
+
+User Input:
+
+ Implement functionality to allow users to input their own source and destination currencies.
+
+# License
+    ```bash
+    Feel free to modify any sections as needed to better fit your project or personal preferences!
 

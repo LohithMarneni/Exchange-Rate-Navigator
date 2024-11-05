@@ -16,9 +16,11 @@ class ExchangeRateNavigator{
     unordered_map<string,vector<Edge>> adjList;
     
     void fetchGraphFromApi(){
+        cout<<"API Integration is not completed yet"<<endl;
         //infuture need to fetch from currency apis which are paid
     }
     public:
+    
     void initializeadjList(){
         //for temporarily only used gpt generated edges in future determined to use the api to fetch the edges
         adjList["USD"].push_back(Edge("EUR", 0.90));//1USD=0.90EUR
@@ -31,6 +33,13 @@ class ExchangeRateNavigator{
         adjList["CAD"].push_back(Edge("AUD", 1.10));//1CAD=1.10AUD
         adjList["AUD"].push_back(Edge("USD", 0.70));//1AUD=0.70USD
         adjList["USD"].push_back(Edge("JPY", 110.50));//1USD=110.50JPY
+    }
+    unordered_set<string> getAvailableCurrencyCodes()const{
+        unordered_set<string> currencyCodes;
+        for(const auto& pair:adjList){
+            currencyCodes.insert(pair.first);
+        }
+        return currencyCodes;
     }
     void findBestPath(const string source,const string destination){
         unordered_map<string, double> dist;
@@ -62,7 +71,7 @@ class ExchangeRateNavigator{
         dist[source] = 1.0;//the distance (or rate) from source to source is 1.0.
         set<pair<double, string>,greater<pair<double,string>>> s;
         s.insert({1.0, source});
-        cout<<"Run before loop"<<endl;//debug line
+        //cout<<"Run before loop"<<endl;//debug line
         while(!s.empty()){
             auto it=*s.begin();
             s.erase(it);
@@ -86,7 +95,7 @@ class ExchangeRateNavigator{
                 }
             } 
         }
-        cout<<"Run after loop"<<endl;//debug line
+        //cout<<"Run after loop"<<endl;debug line
         //error condition for if there was no path to destination from source node
         if(dist[destination]==0.0){
             cout<<"There was no path from "<<source<<" to "<<destination<<endl;
@@ -113,12 +122,42 @@ class ExchangeRateNavigator{
             cout<<pair.first<<" "<<pair.second<<endl;
          }
         cout<<endl;*/
+        cout<<"\nExplanation:\n";
+        cout<<"Starting with 1 unit of "<<source<<",you can convert through the following path:\n";
+        double cumulativeRate = 1.0;
+        for(size_t i = 0;i<path.size()-1;++i){
+            string current=path[i];
+            string next=path[i + 1];
+            for(const auto& edge:adjList[current]){
+                if(edge.destination==next){
+                    cumulativeRate*=edge.exchangeRate;
+                    cout<<current<<" to "<<next<<" at rate "<<edge.exchangeRate
+                         <<", cumulative rate: "<<cumulativeRate<<endl;
+                    break;
+                }
+            }
+        }
+        cout<<"\nBy following this path, you'll end up with "<<dist[destination] 
+            << " units of "<<destination<<" for each 1 unit of "<<source<< "."<<endl;
+    cout<<endl;
     }
-
 };
 int main() {
     ExchangeRateNavigator navigator;
     navigator.initializeadjList(); // Initialize the adjacency list with exchange rates
-    navigator.findBestPath("USD","INR"); // Find the best path from USD to EUR
+    // navigator.findBestPath("USD","INR"); // Find the best path from USD to EUR testing code
+    //Display available currency codes
+    cout<<"Currently available currency codes:"<<endl;
+    unordered_set<string> currencyCodes=navigator.getAvailableCurrencyCodes();
+    for(const auto& code:currencyCodes){
+        cout<<code<<" ";
+    }
+    cout<<endl;
+    string source, destination;
+    cout << "Please enter the source currency code: ";
+    cin >> source;
+    cout << "Please enter the destination currency code: ";
+    cin >> destination;
+    navigator.findBestPath(source, destination);
     return 0;
 }

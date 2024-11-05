@@ -1,6 +1,8 @@
 # Exchange Rate Navigator
+
 ![Alt text](./graphPhoto.png)
-Imagine you are planning a trip from the United States to India and you want to convert your U.S. Dollars (USD) into Indian Rupees (INR). You want to ensure that you are getting the best possible exchange rate, as currency conversion fees can significantly impact your travel budge. You need a way to find the best route(having high exchange rate) for exchanging USD to INR by potentially converting through other currencies to maximize the amount of INR you receive. For example, you might exchange USD to Euros (EUR), then from EUR to GBP (British Pounds), and finally from GBP to INR. Using Exchange Rate Navigator, you can find the best exchange rate while converting to another currency. This project uses set approach Dijkstra's algorithm for getting high exchange rates and best understanding of graphs.
+
+      Imagine you are planning a trip from the United States to India and you want to convert your U.S. Dollars (USD) into Indian Rupees (INR). You want to ensure that you are getting the best possible exchange rate, as currency conversion fees can significantly impact your travel budge. You need a way to find the best route(having high exchange rate) for exchanging USD to INR by potentially converting through other currencies to maximize the amount of INR you receive. For example, you might exchange USD to Euros (EUR), then from EUR to GBP (British Pounds), and finally from GBP to INR. Using Exchange Rate Navigator, you can find the best exchange rate while converting to another currency. This project uses set approach Dijkstra's algorithm for getting high exchange rates and best understanding of graphs.
 
 
 ## Overview
